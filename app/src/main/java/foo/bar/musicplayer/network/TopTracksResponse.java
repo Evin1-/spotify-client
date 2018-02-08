@@ -1,14 +1,14 @@
 package foo.bar.musicplayer.network;
 
-import foo.bar.musicplayer.model.Track;
-
 import org.parceler.Parcel;
 
 import java.util.List;
 
+import foo.bar.musicplayer.model.Track;
+
 @Parcel
 public class TopTracksResponse {
-    List<Track> tracks;
+    private List<Track> tracks;
 
     public List<Track> getTracks() {
         return tracks;

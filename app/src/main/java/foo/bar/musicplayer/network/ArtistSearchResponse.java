@@ -1,12 +1,12 @@
 package foo.bar.musicplayer.network;
 
-import foo.bar.musicplayer.model.Artists;
-
 import org.parceler.Parcel;
+
+import foo.bar.musicplayer.model.Artists;
 
 @Parcel
 public class ArtistSearchResponse {
-    Artists artists;
+    private Artists artists;
 
     public Artists getArtists() {
         return artists;

@@ -8,11 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.squareup.otto.Subscribe;
-
-import foo.bar.musicplayer.event.ArtistSearchEvent;
-import foo.bar.musicplayer.event.BusProvider;
-import foo.bar.musicplayer.network.ArtistSearchResponse;
+import foo.bar.musicplayer.model.Artists;
+import io.reactivex.functions.Consumer;
 
 public class SearchListFragment extends Fragment {
     private static final String TAG = SearchListFragment.class.getSimpleName();
@@ -32,24 +29,16 @@ public class SearchListFragment extends Fragment {
         searchListAdapter = new SearchListAdapter(this.getContext());
         recyclerView.setAdapter(searchListAdapter);
         fetchArtistSearch("Michael");
-        BusProvider.getInstance().register(this);
         return v;
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        BusProvider.getInstance().unregister(this);
-    }
-
-    @Subscribe
-    public void onArtistSearchEvent(ArtistSearchEvent event) {
-        ArtistSearchResponse searchResponse = event.response;
-        searchListAdapter.setSearchResults(searchResponse.getArtists());
     }
 
     private void fetchArtistSearch(String query) {
         MusicPlayerApplication application = (MusicPlayerApplication) getActivity().getApplication();
-        application.service().doArtistSearch(query);
+        application.service().doArtistSearch(query, new Consumer<Artists>() {
+            @Override
+            public void accept(Artists artists) throws Exception {
+                searchListAdapter.setSearchResults(artists);
+            }
+        });
     }
 }
