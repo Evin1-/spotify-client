@@ -35,6 +35,10 @@ public class SpotifyApiClient {
   }
 
   interface SpotifyWebServices {
+    @Headers({
+        "Authorization: Bearer BQCX3aQPiY5IKjI2QuFX9VAGoRPbVM4GPizyhuvJb9guwxlnDFe1e5mZ3EsiDR4nksfnj7i-twh5CbnDtkMnOafFKzyQaqdSH_s5iGPzYQiM5kk4W7N4IiW6aPFOEvA7nhBRHIHRF73y",
+        "Accept: application/json"
+    })
     @GET("v1/search")
     Call<ArtistSearchResponse> search(
         @Query("q") String query,
