@@ -4,7 +4,7 @@ import io.reactivex.Single
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
-object StringUtilities {
+object StringUtils {
   private val timerPrefix = "0:"
   private val timerSufix = "0"
 

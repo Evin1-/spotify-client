@@ -1,24 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/tools"
   xmlns:card_view="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:layout_margin="5dp"
+  app:ignore="NamespaceTypo"
   card_view:cardCornerRadius="4dp">
 
-  <RelativeLayout
+  <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_row_height"
-    android:padding="@dimen/list_row_padding">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
-    <TextView
-      android:id="@+id/artist_name"
-      android:layout_width="wrap_content"
+    <ImageView
+      android:id="@+id/r_result_img"
+      android:layout_width="120dp"
+      android:layout_height="120dp"
+      android:contentDescription="@string/singer_description"
+      android:scaleType="centerCrop" />
+
+    <LinearLayout
+      android:layout_width="0dp"
       android:layout_height="match_parent"
-      android:gravity="center_vertical"
-      android:text="Medium Text"
-      android:textAppearance="?android:attr/textAppearanceMedium" />
+      android:layout_weight="5"
+      android:orientation="vertical">
 
-  </RelativeLayout>
+      <TextView
+        android:id="@+id/r_result_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/list_row_margin"
+        android:layout_marginTop="@dimen/list_row_margin"
+        android:gravity="center_vertical"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        app:text="@string/placeholder" />
 
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:background="@color/colorLightGray" />
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/list_row_margin"
+        app:ignore="UseCompoundDrawables">
+
+        <TextView
+          android:id="@+id/r_result_popularity"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/list_row_margin"
+          app:text="@string/placeholder" />
+
+        <ImageView
+          android:layout_width="12dp"
+          android:layout_height="12dp"
+          android:layout_gravity="center"
+          android:layout_marginStart="5dp"
+          android:src="@drawable/ic_thumb_up_black_18dp"
+          android:tint="@color/colorPrimary"
+          app:ignore="ContentDescription" />
+
+      </LinearLayout>
+    </LinearLayout>
+  </LinearLayout>
 </android.support.v7.widget.CardView>

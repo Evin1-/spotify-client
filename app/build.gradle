@@ -39,9 +39,6 @@ dependencies {
   testImplementation "org.robolectric:robolectric:${rootProject.ext.robolectricVersion}"
   testImplementation "org.mockito:mockito-core:${rootProject.ext.mockitoVersion}"
 
-  implementation 'org.parceler:parceler-api:1.1.9'
-  annotationProcessor 'org.parceler:parceler:1.1.9'
-
   implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
   kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 

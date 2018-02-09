@@ -4,9 +4,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import foo.bar.musicplayer.R
 import foo.bar.musicplayer.model.Artist
+import foo.bar.musicplayer.util.ImageUtils
+import kotlinx.android.synthetic.main.artist_search_result_item.view.*
 
 class SearchListAdapter : RecyclerView.Adapter<SearchListAdapter.ListingViewHolder>() {
 
@@ -30,12 +31,12 @@ class SearchListAdapter : RecyclerView.Adapter<SearchListAdapter.ListingViewHold
 
   override fun getItemCount() = artists.size
 
-
   class ListingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val artistName: TextView = itemView.findViewById<View>(R.id.artist_name) as TextView
+    fun bind(artist: Artist): Unit = with(itemView) {
+      ImageUtils.setImage(context, r_result_img, artist.images)
 
-    fun bind(artist: Artist) {
-      artistName.text = artist.name
+      r_result_name.text = artist.name
+      r_result_popularity.text = artist.popularity
     }
   }
 

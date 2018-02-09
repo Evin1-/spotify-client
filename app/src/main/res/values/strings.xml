@@ -9,5 +9,7 @@
 
     <!-- Spotify Web Services Query Parameter Names-->
     <string name="title_activity_player">PlayerActivity</string>
+  <string name="singer_description">Singer description</string>
+    <string name="placeholder">Placeholder</string>
 
 </resources>
