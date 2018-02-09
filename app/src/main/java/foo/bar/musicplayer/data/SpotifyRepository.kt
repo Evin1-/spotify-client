@@ -6,6 +6,7 @@ import foo.bar.musicplayer.model.Artist
 import foo.bar.musicplayer.util.rx.SchedulerProvider
 import io.reactivex.Single
 import io.reactivex.functions.Consumer
+import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,7 +19,7 @@ class SpotifyRepository @Inject constructor(private val cacheManager: CacheManag
                                             private val remoteManager: RemoteManager,
                                             private val schedulerProvider: SchedulerProvider) {
 
-  private var tokenAuth = ""
+  private var tokenAuth: String? = null
 
   fun addConsumer(consumer: Consumer<List<Artist>>) {
     cacheManager.addConsumer(consumer)
@@ -30,26 +31,39 @@ class SpotifyRepository @Inject constructor(private val cacheManager: CacheManag
 
   fun retrieveArtists(searchTerm: String): Single<List<Artist>> {
 
-    singleRemote(searchTerm, buildHeadersMap()).subscribeOn(schedulerProvider.io())
-        .observeOn(schedulerProvider.ui())
-        .subscribe({ cacheManager.updateCacheData(searchTerm, it) }, { refreshToken(searchTerm) })
+    if (tokenAuth == null) {
+      refreshToken(searchTerm, Exception(RemoteManager.UNAUTHORIZED_MESSAGE))
+    } else {
+      val headersMap = buildHeadersMap()
+      remoteArtistSingle(searchTerm, headersMap)?.subscribeOn(schedulerProvider.io())
+          ?.observeOn(schedulerProvider.ui())
+          ?.subscribe({ cacheManager.updateCacheData(searchTerm, it) }, { refreshToken(searchTerm, it) })
+    }
 
     return Single.just(cacheManager.retrieveDataInCache(searchTerm))
   }
 
-  private fun singleRemote(searchTerm: String, headersMap: Map<String, String>) = remoteManager.retrieveArtists(searchTerm, headersMap)
-      .flatMap { Single.just(it.artists.items) }
-      .subscribeOn(schedulerProvider.io())
-      .observeOn(schedulerProvider.ui())
+  private fun remoteArtistSingle(searchTerm: String, headersMap: Map<String, String>): Single<MutableList<Artist>>? {
+    return when (tokenAuth) {
+      null -> Single.error(RemoteManager.UNAUTHORIZED_EXCEPTION)
+      else -> remoteManager.retrieveArtists(searchTerm, headersMap)
+          .flatMap { Single.just(it.artists.items) }
+          .subscribeOn(schedulerProvider.io())
+          .observeOn(schedulerProvider.ui())
+    }
+  }
 
-  private fun refreshToken(searchTerm: String) {
+  private fun refreshToken(searchTerm: String, it: Throwable) {
+    if (it.message != RemoteManager.UNAUTHORIZED_MESSAGE) {
+      return
+    }
     remoteManager.refreshToken()
         .doOnEvent({ response, throwable ->
           if (throwable == null && response.isSuccessful) {
             tokenAuth = response.body()?.accessToken ?: ""
           }
         })
-        .flatMap { singleRemote(searchTerm, buildHeadersMap()) }
+        .flatMap { remoteArtistSingle(searchTerm, buildHeadersMap()) }
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
         .subscribe({ cacheManager.updateCacheData(searchTerm, it) }, { it.printStackTrace() })

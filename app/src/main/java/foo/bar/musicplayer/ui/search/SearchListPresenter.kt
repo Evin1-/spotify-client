@@ -36,7 +36,7 @@ class SearchListPresenter @Inject constructor(private val spotifyRepository: Spo
     view?.showProgress()
     StringUtilities.makeUrlEncoded(searchTerm)
         .doOnError { handleError("Couldn't encode that string!") }
-        .flatMap { t -> spotifyRepository.retrieveArtists(searchTerm) }
+        .flatMap { spotifyRepository.retrieveArtists(searchTerm) }
         .subscribeOn(schedulerProvider.io())
         .observeOn(schedulerProvider.ui())
         .subscribe({ refreshView(it) }, {

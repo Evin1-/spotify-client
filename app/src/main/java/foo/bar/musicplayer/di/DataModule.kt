@@ -23,15 +23,23 @@ class DataModule {
 
   @Provides
   @Api
-  fun provideApiRetrofit(okHttpClient: OkHttpClient): Retrofit = SpotifyService.Factory.createRetrofit(okHttpClient, SpotifyService.BASE_API_URL)
+  fun provideApiRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    return SpotifyService.Factory.createRetrofit(okHttpClient, SpotifyService.BASE_API_URL)
+  }
 
   @Provides
   @Auth
-  fun provideAuthRetrofit(okHttpClient: OkHttpClient): Retrofit = SpotifyService.Factory.createRetrofit(okHttpClient, SpotifyService.BASE_AUTH_URL)
+  fun provideAuthRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    return SpotifyService.Factory.createRetrofit(okHttpClient, SpotifyService.BASE_AUTH_URL)
+  }
 
   @Provides
-  fun provideApiService(@Api retrofit: Retrofit): SpotifyService.SpotifyApiService = SpotifyService.createApiService(retrofit)
+  fun provideApiService(@Api retrofit: Retrofit): SpotifyService.SpotifyApiService {
+    return SpotifyService.createApiService(retrofit)
+  }
 
   @Provides
-  fun provideAuthService(@Auth retrofit: Retrofit): SpotifyService.SpotifyAuthService = SpotifyService.createAuthService(retrofit)
+  fun provideAuthService(@Auth retrofit: Retrofit): SpotifyService.SpotifyAuthService {
+    return SpotifyService.createAuthService(retrofit)
+  }
 }

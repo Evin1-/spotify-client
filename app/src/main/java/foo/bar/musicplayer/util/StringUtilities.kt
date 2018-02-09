@@ -9,9 +9,8 @@ object StringUtilities {
   private val timerSufix = "0"
 
   fun formatTimer(time: Int): String {
-    var time = time
-    time = time / 1000 % 60
-    return timerPrefix + if (time < 10) timerSufix + time.toString() else time.toString()
+    val dividedTime = time / 1000 % 60
+    return timerPrefix + if (dividedTime < 10) timerSufix + dividedTime.toString() else dividedTime.toString()
   }
 
   @Throws(UnsupportedEncodingException::class)

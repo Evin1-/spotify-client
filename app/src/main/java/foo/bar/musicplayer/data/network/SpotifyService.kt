@@ -29,10 +29,10 @@ interface SpotifyService {
   }
 
   interface SpotifyAuthService {
-    @Headers("Authorization: Basic MTA0YzQ4YmM3ZWFhNDU2ZjkzNzcyMjJhNDczMWFiZDc6M2VmNTc3ZWUxMzAyNGQ2N2FkYzU2NTM5YTliZjFmNWM=")
     @POST("/api/token")
     @FormUrlEncoded
-    fun refreshToken(@Field("grant_type") grantType: String): Single<Response<TokenResponse>>
+    fun refreshToken(@Field("grant_type") grantType: String,
+                     @Header("Authorization") authorization: String): Single<Response<TokenResponse>>
   }
 
   companion object Factory {
@@ -57,7 +57,7 @@ interface SpotifyService {
           .client(okHttpClient)
           .addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
           .addConverterFactory(GsonConverterFactory.create())
-          .build();
+          .build()
     }
 
     fun createApiService(retrofit: Retrofit): SpotifyApiService = retrofit.create(SpotifyApiService::class.java)
