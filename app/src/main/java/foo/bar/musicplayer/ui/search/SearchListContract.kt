@@ -13,6 +13,7 @@ interface SearchListContract {
     fun showData(artists: List<Artist>)
     fun showDescendingOrderIcon()
     fun showAscendingOrderIcon()
+    fun showFilterFragment(min: Int, max: Int)
   }
 
   interface Presenter {
@@ -20,5 +21,7 @@ interface SearchListContract {
     fun detachView()
     fun loadData(searchTerm: String)
     fun toggleSortData()
+    fun getFilterRanges()
+    fun filterList(min: Int, max: Int)
   }
 }

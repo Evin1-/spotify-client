@@ -7,9 +7,9 @@ import foo.bar.musicplayer.util.rx.SchedulerProvider
 import foo.bar.musicplayer.util.ExtensionUtils.swapThreadJumpBack
 import io.reactivex.Single
 import io.reactivex.functions.Consumer
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.Exception
 
 /**
  * Created by evin on 2/8/18.
@@ -30,7 +30,11 @@ class SpotifyRepository @Inject constructor(private val cacheManager: CacheManag
     cacheManager.removeConsumer(consumer)
   }
 
-  fun retrieveArtists(searchTerm: String): Single<List<Artist>> {
+  fun retrieveArtists(searchTerm: String?): Single<List<Artist>> {
+    if (searchTerm == null) {
+      return Single.error(Exception("Can't look up a null term!"))
+    }
+
     if (tokenAuth == null) {
       refreshToken(searchTerm, Exception(RemoteManager.UNAUTHORIZED_MESSAGE))
     } else {
@@ -40,7 +44,7 @@ class SpotifyRepository @Inject constructor(private val cacheManager: CacheManag
           ?.subscribe({ cacheManager.updateCacheData(searchTerm, it) }, { refreshToken(searchTerm, it) })
     }
 
-    return Single.just(cacheManager.retrieveDataInCache(searchTerm))
+    return retrieveArtistsCache(searchTerm)
   }
 
   private fun remoteArtistSingle(searchTerm: String, headersMap: Map<String, String>): Single<MutableList<Artist>>? {
@@ -73,5 +77,12 @@ class SpotifyRepository @Inject constructor(private val cacheManager: CacheManag
     map["Authorization"] = "Bearer " + tokenAuth
     map["Accept"] = "application/json"
     return map
+  }
+
+  fun retrieveArtistsCache(searchTerm: String?): Single<List<Artist>> {
+    if (searchTerm == null) {
+      return Single.error(Exception("Can't look up a null term!"))
+    }
+    return Single.just(cacheManager.retrieveDataInCache(searchTerm))
   }
 }

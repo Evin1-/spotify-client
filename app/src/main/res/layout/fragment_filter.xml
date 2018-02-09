@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:padding="20dp">
+
+  <SeekBar
+    android:id="@+id/f_filter_seek_max"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/f_filter_txt_max_placeholder" />
+
+  <SeekBar
+    android:id="@+id/f_filter_seek_min"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="8dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/f_filter_txt_min_placeholder" />
+
+  <TextView
+    android:id="@+id/f_filter_txt_max_placeholder"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:text="@string/maximum"
+    android:textColor="@android:color/black"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+    android:id="@+id/f_filter_txt_min_placeholder"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="24dp"
+    android:text="@string/minimum"
+    android:textColor="@android:color/black"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/f_filter_seek_max" />
+
+  <TextView
+    android:id="@+id/f_filter_txt_max"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    app:layout_constraintStart_toEndOf="@+id/f_filter_txt_max_placeholder"
+    app:layout_constraintTop_toTopOf="@+id/f_filter_txt_max_placeholder"
+    tools:text="@string/placeholder" />
+
+  <TextView
+    android:id="@+id/f_filter_txt_min"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    app:layout_constraintStart_toEndOf="@+id/f_filter_txt_min_placeholder"
+    app:layout_constraintTop_toTopOf="@+id/f_filter_txt_min_placeholder"
+    tools:text="@string/placeholder" />
+
+  <Button
+    android:id="@+id/f_filter_accept"
+    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="8dp"
+    android:text="@string/filter_button"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/f_filter_seek_min" />
+</android.support.constraint.ConstraintLayout>

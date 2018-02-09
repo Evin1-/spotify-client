@@ -3,7 +3,6 @@ package foo.bar.musicplayer.ui.search
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v4.content.ContextCompat.getDrawable
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
@@ -12,11 +11,12 @@ import android.widget.Toast
 import foo.bar.musicplayer.MusicPlayerApplication
 import foo.bar.musicplayer.R
 import foo.bar.musicplayer.model.Artist
+import foo.bar.musicplayer.ui.filter.FilterFragment
 import foo.bar.musicplayer.ui.search.di.DaggerSearchListComponent
 import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
 
-class SearchListFragment : Fragment(), SearchListContract.View {
+class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.FilterCallback {
 
   @Inject
   lateinit var searchListPresenter: SearchListPresenter
@@ -55,7 +55,7 @@ class SearchListFragment : Fragment(), SearchListContract.View {
 
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     when (item?.itemId) {
-      R.id.m_main_filter -> TODO()
+      R.id.m_main_filter -> searchListPresenter.getFilterRanges()
       R.id.m_main_order -> searchListPresenter.toggleSortData()
       else -> return super.onOptionsItemSelected(item)
     }
@@ -88,6 +88,15 @@ class SearchListFragment : Fragment(), SearchListContract.View {
         ?.icon = context?.let { getDrawable(it, R.drawable.ic_trending_up_white_24dp) }
   }
 
+  override fun showFilterFragment(min: Int, max: Int) {
+    val filterFragment = FilterFragment.newInstance(min, max)
+    filterFragment.show(childFragmentManager, FILTER_FRAGMENT_TAG)
+  }
+
+  override fun onRangesSelected(min: Int, max: Int) {
+    searchListPresenter.filterList(min, max)
+  }
+
   private fun subscribeLiveData() {
     searchListPresenter.getLiveData()
         .observe(this, Observer { refreshAdapter(it) })
@@ -115,5 +124,6 @@ class SearchListFragment : Fragment(), SearchListContract.View {
 
   companion object {
     private val TAG = SearchListFragment::class.java.simpleName
+    private const val FILTER_FRAGMENT_TAG = "FILTER_FRAGMENT_TAG";
   }
 }
