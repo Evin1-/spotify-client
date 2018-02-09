@@ -24,5 +24,6 @@ interface SearchListContract {
     fun loadDataFiltered(min: Int, max: Int)
     fun toggleSortData()
     fun triggerFilterView(currentMin: Int?, currentMax: Int?)
+    fun setCurrentOrder(currentOrder: Int)
   }
 }

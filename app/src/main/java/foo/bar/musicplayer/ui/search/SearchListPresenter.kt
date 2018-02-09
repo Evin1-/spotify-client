@@ -95,6 +95,16 @@ class SearchListPresenter @Inject constructor(private val spotifyRepository: Spo
     loadDataFiltered(currentMin ?: min ?: Int.MIN_VALUE, currentMax ?: max ?: Int.MAX_VALUE)
   }
 
+  override fun setCurrentOrder(currentOrder: Int) {
+    this.order = currentOrder
+
+    if (order == ORDER_DESC) {
+      view?.showDescendingOrderIcon()
+    } else {
+      view?.showAscendingOrderIcon()
+    }
+  }
+
   private fun getFilterRanges(artists: List<Artist>) {
     val sortedByPopularity = artists.sortedByPopularity(ORDER_DESC)
     max = sortedByPopularity?.firstOrNull()?.popularity?.toInt() ?: 0

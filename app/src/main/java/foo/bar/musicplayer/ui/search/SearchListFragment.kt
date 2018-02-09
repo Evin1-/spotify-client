@@ -26,6 +26,7 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
 
   private var currentMin: Int? = null
   private var currentMax: Int? = null
+  private var currentOrder = SearchListPresenter.ORDER_DESC
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -49,6 +50,7 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
 
     initViews()
     subscribeLiveData()
+    searchListPresenter.setCurrentOrder(currentOrder)
     if (savedInstanceState == null) {
       searchListPresenter.loadDataRemotely("Michael")
     } else {
@@ -60,6 +62,7 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
     super.onSaveInstanceState(outState)
     currentMin?.let { outState.putInt(KEY_MIN_BUNDLE, it) }
     currentMax?.let { outState.putInt(KEY_MAX_BUNDLE, it) }
+    outState.putInt(KEY_ORDER_BUNDLE, currentOrder)
   }
 
   override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -95,11 +98,13 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
   override fun showAscendingOrderIcon() {
     menu?.findItem(R.id.m_main_order)
         ?.icon = context?.let { getDrawable(it, R.drawable.ic_trending_down_white_24dp) }
+    currentOrder = SearchListPresenter.ORDER_ASC
   }
 
   override fun showDescendingOrderIcon() {
     menu?.findItem(R.id.m_main_order)
         ?.icon = context?.let { getDrawable(it, R.drawable.ic_trending_up_white_24dp) }
+    currentOrder = SearchListPresenter.ORDER_DESC
   }
 
   override fun showFilterFragment(min: Int, max: Int, currentMin: Int, currentMax: Int) {
@@ -145,6 +150,7 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
     if (savedInstanceState.containsKey(KEY_MAX_BUNDLE)) {
       currentMax = savedInstanceState.getInt(KEY_MAX_BUNDLE)
     }
+    currentOrder = savedInstanceState.getInt(KEY_ORDER_BUNDLE, SearchListPresenter.ORDER_DESC)
   }
 
   companion object {
@@ -152,5 +158,6 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
     private const val FILTER_FRAGMENT_TAG = "FILTER_FRAGMENT_TAG";
     private const val KEY_MIN_BUNDLE = "KEY_MIN_BUNDLE";
     private const val KEY_MAX_BUNDLE = "KEY_MAX_BUNDLE";
+    private const val KEY_ORDER_BUNDLE = "KEY_ORDER_BUNDLE";
   }
 }
