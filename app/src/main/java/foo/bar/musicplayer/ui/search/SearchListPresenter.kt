@@ -75,10 +75,7 @@ class SearchListPresenter @Inject constructor(private val spotifyRepository: Spo
         .swapThreadJumpBack(schedulerProvider)
         .subscribe { artists ->
           getFilterRanges(artists)
-          val filteredList = artists.filter {
-            val popularity = it.popularity?.toInt() ?: -1
-            popularity in min..max
-          }
+          val filteredList = filterList(artists, min, max)
           refreshView(filteredList)
         }
   }
@@ -102,6 +99,13 @@ class SearchListPresenter @Inject constructor(private val spotifyRepository: Spo
       view?.showDescendingOrderIcon()
     } else {
       view?.showAscendingOrderIcon()
+    }
+  }
+
+  private fun filterList(artists: List<Artist>, min: Int, max: Int): List<Artist> {
+    return artists.filter {
+      val popularity = it.popularity?.toInt() ?: -1
+      popularity in min..max
     }
   }
 
