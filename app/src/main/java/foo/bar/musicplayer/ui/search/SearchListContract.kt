@@ -19,7 +19,7 @@ interface SearchListContract {
   interface Presenter {
     fun attachView(view: View)
     fun detachView()
-    fun loadData(searchTerm: String)
+    fun loadDataRemotely(searchTerm: String)
     fun loadDataFromCache(searchTerm: String, currentMin: Int?, currentMax: Int?)
     fun loadDataFiltered(min: Int, max: Int)
     fun toggleSortData()

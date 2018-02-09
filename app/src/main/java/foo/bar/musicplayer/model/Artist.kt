@@ -7,4 +7,4 @@ data class Artist(
     val name: String? = null,
     val popularity: String? = null,
     val images: List<Image>? = null
-) : Serializable
+)

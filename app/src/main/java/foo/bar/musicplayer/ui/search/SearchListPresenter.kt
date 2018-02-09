@@ -41,7 +41,7 @@ class SearchListPresenter @Inject constructor(private val spotifyRepository: Spo
     compositeDisposable.dispose()
   }
 
-  override fun loadData(searchTerm: String) {
+  override fun loadDataRemotely(searchTerm: String) {
     this.searchTerm = searchTerm
     view?.showProgress()
     StringUtils.makeUrlEncoded(searchTerm)
@@ -84,7 +84,6 @@ class SearchListPresenter @Inject constructor(private val spotifyRepository: Spo
   }
 
   override fun triggerFilterView(currentMin: Int?, currentMax: Int?) {
-    AppLogger.d("TAG___ $min $max $currentMin $currentMax")
     val minValue = min ?: 0
     val maxValue = max ?: 0
     view?.showFilterFragment(minValue, maxValue,
@@ -93,7 +92,7 @@ class SearchListPresenter @Inject constructor(private val spotifyRepository: Spo
 
   override fun loadDataFromCache(searchTerm: String, currentMin: Int?, currentMax: Int?) {
     this.searchTerm = searchTerm
-    loadDataFiltered(currentMin ?: min ?: 0, currentMax ?: max ?: 0)
+    loadDataFiltered(currentMin ?: min ?: Int.MIN_VALUE, currentMax ?: max ?: Int.MAX_VALUE)
   }
 
   private fun getFilterRanges(artists: List<Artist>) {

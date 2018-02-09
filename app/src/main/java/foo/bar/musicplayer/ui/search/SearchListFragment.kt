@@ -50,7 +50,7 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
     initViews()
     subscribeLiveData()
     if (savedInstanceState == null) {
-      searchListPresenter.loadData("Michael")
+      searchListPresenter.loadDataRemotely("Michael")
     } else {
       searchListPresenter.loadDataFromCache("Michael", currentMin, currentMax)
     }
