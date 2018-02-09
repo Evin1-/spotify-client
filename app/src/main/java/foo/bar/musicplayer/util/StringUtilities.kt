@@ -1,5 +1,6 @@
 package foo.bar.musicplayer.util
 
+import io.reactivex.Single
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
@@ -14,7 +15,7 @@ object StringUtilities {
   }
 
   @Throws(UnsupportedEncodingException::class)
-  fun makeUrlEncoded(input: String): String {
-    return URLEncoder.encode(input, "UTF-8")
+  fun makeUrlEncoded(input: String): Single<String> {
+    return Single.fromCallable { URLEncoder.encode(input, "UTF-8") }
   }
 }

@@ -1,6 +1,5 @@
 package foo.bar.musicplayer.ui.search
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +12,11 @@ import foo.bar.musicplayer.model.Artists
 
 class SearchListAdapter : RecyclerView.Adapter<SearchListAdapter.ListingViewHolder>() {
 
-  private var artists: Artists? = Artists()
+  private var artists = mutableListOf<Artist>()
 
-  fun setSearchResults(artists: Artists) {
-    this.artists = artists
+  fun setSearchResults(artists: List<Artist>) {
+    this.artists.clear()
+    this.artists.addAll(artists)
     notifyDataSetChanged()
   }
 
@@ -27,16 +27,11 @@ class SearchListAdapter : RecyclerView.Adapter<SearchListAdapter.ListingViewHold
   }
 
   override fun onBindViewHolder(holder: SearchListAdapter.ListingViewHolder, position: Int) {
-    holder.bind(artists!!.items[position])
+    holder.bind(artists[position])
   }
 
-  override fun getItemCount(): Int {
-    return if (artists != null) {
-      artists!!.items.size
-    } else {
-      0
-    }
-  }
+  override fun getItemCount() = artists.size
+
 
   class ListingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val artistName: TextView = itemView.findViewById<View>(R.id.artist_name) as TextView

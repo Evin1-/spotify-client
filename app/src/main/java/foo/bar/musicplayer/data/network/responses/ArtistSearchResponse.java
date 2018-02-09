@@ -1,4 +1,4 @@
-package foo.bar.musicplayer.network;
+package foo.bar.musicplayer.data.network.responses;
 
 import org.parceler.Parcel;
 

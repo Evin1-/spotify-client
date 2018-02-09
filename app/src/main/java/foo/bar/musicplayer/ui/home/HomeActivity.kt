@@ -16,15 +16,14 @@ class HomeActivity : AppCompatActivity() {
   }
 
   private fun showSearchListFragment() {
-    if (supportFragmentManager.findFragmentByTag(SEARCHLIST_FRAGMENT_TAG) == null) {
-      supportFragmentManager
-          .beginTransaction()
-          .replace(R.id.container, SearchListFragment(), SEARCHLIST_FRAGMENT_TAG)
+    if (supportFragmentManager.findFragmentByTag(SEARCH_FRAGMENT_TAG) == null) {
+      supportFragmentManager.beginTransaction()
+          .replace(R.id.container, SearchListFragment(), SEARCH_FRAGMENT_TAG)
           .commit()
     }
   }
 
   companion object {
-    private val SEARCHLIST_FRAGMENT_TAG = "fragment_searchlist"
+    private const val SEARCH_FRAGMENT_TAG = "SEARCH_FRAGMENT_TAG"
   }
 }
