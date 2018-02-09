@@ -19,4 +19,6 @@
   <string name="filter_button">Filter</string>
   <string name="max_min_larger">Maximum needs to be larger than Minimum!</string>
 
+  <string name="fragment_search_tag" formatted="false" translatable="false">FRAGMENT_SEARCH_TAG</string>
+
 </resources>

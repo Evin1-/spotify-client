@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat.getDrawable
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import android.widget.Toast
@@ -130,7 +131,11 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
   private fun initViews() {
     searchListAdapter = SearchListAdapter()
     f_search_recycler.adapter = searchListAdapter
-    f_search_recycler.layoutManager = LinearLayoutManager(context)
+    if (resources.getBoolean(R.bool.is_landscape)) {
+      f_search_recycler.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
+    } else {
+      f_search_recycler.layoutManager = LinearLayoutManager(context)
+    }
   }
 
   private fun injectDependencies() {

@@ -4,7 +4,6 @@ import android.arch.lifecycle.MutableLiveData
 import foo.bar.musicplayer.data.SpotifyRepository
 import foo.bar.musicplayer.di.scopes.PerView
 import foo.bar.musicplayer.model.Artist
-import foo.bar.musicplayer.util.AppLogger
 import foo.bar.musicplayer.util.ExtensionUtils.sortedByPopularity
 import foo.bar.musicplayer.util.ExtensionUtils.swapThreadJumpBack
 import foo.bar.musicplayer.util.ExtensionUtils.toggleOrder
@@ -57,8 +56,8 @@ class SearchListPresenter @Inject constructor(private val spotifyRepository: Spo
   }
 
   override fun toggleSortData(min: Int?, max: Int?) {
-    val minValue = min ?: 0
-    val maxValue = max ?: 0
+    val minValue = min ?: Int.MIN_VALUE
+    val maxValue = max ?: Int.MAX_VALUE
     order = order.toggleOrder()
 
     if (order == ORDER_DESC) {

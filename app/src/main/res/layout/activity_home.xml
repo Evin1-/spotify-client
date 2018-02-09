@@ -4,18 +4,10 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <FrameLayout
-    android:id="@+id/container"
+  <fragment
+    class="foo.bar.musicplayer.ui.search.SearchListFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-  </FrameLayout>
-
-  <FrameLayout
-    android:id="@+id/modal_fragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-  </FrameLayout>
+    android:layout_height="match_parent"
+    android:tag="@string/fragment_search_tag" />
 
 </FrameLayout>
