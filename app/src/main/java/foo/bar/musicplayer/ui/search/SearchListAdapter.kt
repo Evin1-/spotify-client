@@ -5,10 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-
 import foo.bar.musicplayer.R
 import foo.bar.musicplayer.model.Artist
-import foo.bar.musicplayer.model.Artists
 
 class SearchListAdapter : RecyclerView.Adapter<SearchListAdapter.ListingViewHolder>() {
 

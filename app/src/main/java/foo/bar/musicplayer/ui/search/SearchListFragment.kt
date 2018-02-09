@@ -1,5 +1,6 @@
 package foo.bar.musicplayer.ui.search
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -41,11 +42,17 @@ class SearchListFragment : Fragment(), SearchListContract.View {
     super.onViewCreated(view, savedInstanceState)
 
     initViews()
+    searchListPresenter.getLiveData()
+        .observe(this, Observer { refreshAdapter(it) })
     searchListPresenter.loadData("Michael")
   }
 
+  private fun refreshAdapter(artists: List<Artist>?) {
+    searchListAdapter?.setSearchResults(artists ?: emptyList())
+  }
+
   override fun showData(artists: List<Artist>) {
-    searchListAdapter?.setSearchResults(artists)
+    refreshAdapter(artists)
   }
 
   override fun showProgress() {

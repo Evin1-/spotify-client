@@ -2,7 +2,6 @@ package foo.bar.musicplayer
 
 import android.app.Application
 
-import foo.bar.musicplayer.data.network.SpotifyApiClient
 import foo.bar.musicplayer.di.DaggerMainComponent
 import foo.bar.musicplayer.di.DataModule
 import foo.bar.musicplayer.di.MainComponent

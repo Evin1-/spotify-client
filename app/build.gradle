@@ -6,7 +6,7 @@ apply plugin: 'kotlin-kapt'
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
   defaultConfig {
-    applicationId "com.example.myapplication"
+    applicationId "foo.bar.musicplayer"
     minSdkVersion rootProject.ext.minSdkVersion
     targetSdkVersion rootProject.ext.targetSdkVersion
     versionCode rootProject.ext.versionCode

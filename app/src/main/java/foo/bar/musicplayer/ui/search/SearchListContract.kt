@@ -1,8 +1,6 @@
 package foo.bar.musicplayer.ui.search
 
-import android.view.View
 import foo.bar.musicplayer.model.Artist
-import foo.bar.musicplayer.model.Artists
 
 /**
  * Created by evin on 2/8/18.
