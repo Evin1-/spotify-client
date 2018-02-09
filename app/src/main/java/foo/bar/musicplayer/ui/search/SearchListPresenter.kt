@@ -4,11 +4,12 @@ import android.arch.lifecycle.MutableLiveData
 import foo.bar.musicplayer.data.SpotifyRepository
 import foo.bar.musicplayer.di.scopes.PerView
 import foo.bar.musicplayer.model.Artist
+import foo.bar.musicplayer.util.AppLogger
+import foo.bar.musicplayer.util.ExtensionUtils.sortedByPopularity
+import foo.bar.musicplayer.util.ExtensionUtils.swapThreadJumpBack
+import foo.bar.musicplayer.util.ExtensionUtils.toggleOrder
 import foo.bar.musicplayer.util.StringUtils
 import foo.bar.musicplayer.util.rx.SchedulerProvider
-import foo.bar.musicplayer.util.ExtensionUtils.swapThreadJumpBack
-import foo.bar.musicplayer.util.ExtensionUtils.sortedByPopularity
-import foo.bar.musicplayer.util.ExtensionUtils.toggleOrder
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Consumer
 import javax.inject.Inject
@@ -21,10 +22,13 @@ class SearchListPresenter @Inject constructor(private val spotifyRepository: Spo
                                               private val schedulerProvider: SchedulerProvider) : SearchListContract.Presenter {
   private var view: SearchListContract.View? = null
   private val compositeDisposable = CompositeDisposable()
-  private val consumer = Consumer<List<Artist>> { refreshView(it) }
+  private val consumer = Consumer<List<Artist>> { refreshData(it) }
+
   private val liveData = MutableLiveData<List<Artist>>()
   private var order = ORDER_DESC
   private var searchTerm: String? = null
+  private var max: Int? = null
+  private var min: Int? = null
 
   override fun attachView(view: SearchListContract.View) {
     this.view = view
@@ -44,26 +48,12 @@ class SearchListPresenter @Inject constructor(private val spotifyRepository: Spo
         .doOnError { handleError("Couldn't encode that string!") }
         .flatMap { spotifyRepository.retrieveArtists(searchTerm) }
         .swapThreadJumpBack(schedulerProvider)
-        .subscribe({ refreshView(it) }, {
+        .subscribe({
+          refreshData(it)
+        }, {
           it.printStackTrace()
           handleError("Couldn't retrieve items from cache!")
         })
-  }
-
-  override fun getFilterRanges() {
-    spotifyRepository.retrieveArtistsCache(searchTerm)
-        .swapThreadJumpBack(schedulerProvider)
-        .subscribe { t ->
-          val sortedByPopularity = t.sortedByPopularity(ORDER_DESC)
-          val max = sortedByPopularity?.firstOrNull()?.popularity?.toInt()
-          val min = sortedByPopularity?.lastOrNull()?.popularity?.toInt()
-
-          if (min == null || max == null) {
-            view?.showError("Couldn't get ranges in this set!")
-          } else {
-            view?.showFilterFragment(min, max)
-          }
-        }
   }
 
   override fun toggleSortData() {
@@ -75,21 +65,50 @@ class SearchListPresenter @Inject constructor(private val spotifyRepository: Spo
       view?.showAscendingOrderIcon()
     }
 
-    spotifyRepository.retrieveArtistsCache(searchTerm)
+    spotifyRepository.retrieveArtistsFromCache(searchTerm)
         .swapThreadJumpBack(schedulerProvider)
         .subscribe { t -> refreshView(t) }
   }
 
-  override fun filterList(min: Int, max: Int) {
-    spotifyRepository.retrieveArtistsCache(searchTerm)
+  override fun loadDataFiltered(min: Int, max: Int) {
+    spotifyRepository.retrieveArtistsFromCache(searchTerm)
         .swapThreadJumpBack(schedulerProvider)
-        .subscribe { t ->
-          val filteredList = t.filter {
+        .subscribe { artists ->
+          getFilterRanges(artists)
+          val filteredList = artists.filter {
             val popularity = it.popularity?.toInt() ?: -1
             popularity in min..max
           }
           refreshView(filteredList)
         }
+  }
+
+  override fun triggerFilterView(currentMin: Int?, currentMax: Int?) {
+    AppLogger.d("TAG___ $min $max $currentMin $currentMax")
+    val minValue = min ?: 0
+    val maxValue = max ?: 0
+    view?.showFilterFragment(minValue, maxValue,
+        currentMin ?: minValue, currentMax ?: maxValue)
+  }
+
+  override fun loadDataFromCache(searchTerm: String, currentMin: Int?, currentMax: Int?) {
+    this.searchTerm = searchTerm
+    loadDataFiltered(currentMin ?: min ?: 0, currentMax ?: max ?: 0)
+  }
+
+  private fun getFilterRanges(artists: List<Artist>) {
+    val sortedByPopularity = artists.sortedByPopularity(ORDER_DESC)
+    max = sortedByPopularity?.firstOrNull()?.popularity?.toInt() ?: 0
+    min = sortedByPopularity?.lastOrNull()?.popularity?.toInt() ?: 0
+
+    if (min == null || max == null) {
+      view?.showError("Couldn't get ranges in this set!")
+    }
+  }
+
+  private fun refreshData(artists: List<Artist>) {
+    getFilterRanges(artists)
+    refreshView(artists)
   }
 
   private fun handleError(error: String) {

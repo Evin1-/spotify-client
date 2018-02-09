@@ -24,11 +24,15 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
   private var searchListAdapter: SearchListAdapter? = null
   private var menu: Menu? = null
 
+  private var currentMin: Int? = null
+  private var currentMax: Int? = null
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setHasOptionsMenu(true);
     injectDependencies()
     searchListPresenter.attachView(this)
+    savedInstanceState?.let { loadSavedState(it) }
   }
 
   override fun onDestroy() {
@@ -45,7 +49,17 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
 
     initViews()
     subscribeLiveData()
-    searchListPresenter.loadData("Michael")
+    if (savedInstanceState == null) {
+      searchListPresenter.loadData("Michael")
+    } else {
+      searchListPresenter.loadDataFromCache("Michael", currentMin, currentMax)
+    }
+  }
+
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    currentMin?.let { outState.putInt(KEY_MIN_BUNDLE, it) }
+    currentMax?.let { outState.putInt(KEY_MAX_BUNDLE, it) }
   }
 
   override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -55,7 +69,7 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
 
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     when (item?.itemId) {
-      R.id.m_main_filter -> searchListPresenter.getFilterRanges()
+      R.id.m_main_filter -> searchListPresenter.triggerFilterView(currentMin, currentMax)
       R.id.m_main_order -> searchListPresenter.toggleSortData()
       else -> return super.onOptionsItemSelected(item)
     }
@@ -88,13 +102,15 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
         ?.icon = context?.let { getDrawable(it, R.drawable.ic_trending_up_white_24dp) }
   }
 
-  override fun showFilterFragment(min: Int, max: Int) {
-    val filterFragment = FilterFragment.newInstance(min, max)
+  override fun showFilterFragment(min: Int, max: Int, currentMin: Int, currentMax: Int) {
+    val filterFragment = FilterFragment.newInstance(min, max, currentMin, currentMax)
     filterFragment.show(childFragmentManager, FILTER_FRAGMENT_TAG)
   }
 
   override fun onRangesSelected(min: Int, max: Int) {
-    searchListPresenter.filterList(min, max)
+    currentMin = min
+    currentMax = max
+    searchListPresenter.loadDataFiltered(min, max)
   }
 
   private fun subscribeLiveData() {
@@ -122,8 +138,19 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
     }
   }
 
+  private fun loadSavedState(savedInstanceState: Bundle) {
+    if (savedInstanceState.containsKey(KEY_MIN_BUNDLE)) {
+      currentMin = savedInstanceState.getInt(KEY_MIN_BUNDLE)
+    }
+    if (savedInstanceState.containsKey(KEY_MAX_BUNDLE)) {
+      currentMax = savedInstanceState.getInt(KEY_MAX_BUNDLE)
+    }
+  }
+
   companion object {
     private val TAG = SearchListFragment::class.java.simpleName
     private const val FILTER_FRAGMENT_TAG = "FILTER_FRAGMENT_TAG";
+    private const val KEY_MIN_BUNDLE = "KEY_MIN_BUNDLE";
+    private const val KEY_MAX_BUNDLE = "KEY_MAX_BUNDLE";
   }
 }

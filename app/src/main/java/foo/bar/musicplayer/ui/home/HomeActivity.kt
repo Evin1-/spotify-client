@@ -2,12 +2,9 @@ package foo.bar.musicplayer.ui.home
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-
+import android.view.Menu
 import foo.bar.musicplayer.R
 import foo.bar.musicplayer.ui.search.SearchListFragment
-import android.R.menu
-import android.view.Menu
-import android.view.MenuInflater
 
 
 class HomeActivity : AppCompatActivity() {

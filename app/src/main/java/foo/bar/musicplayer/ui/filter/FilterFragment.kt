@@ -2,12 +2,10 @@ package foo.bar.musicplayer.ui.filter
 
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
-import android.widget.Toast
 import foo.bar.musicplayer.R
 import foo.bar.musicplayer.util.AppLogger
 import kotlinx.android.synthetic.main.fragment_filter.*
@@ -41,21 +39,25 @@ class FilterFragment : DialogFragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    val max = arguments?.getInt(KEY_MAXIMUM_BUNDLE) ?: 0
     val min = arguments?.getInt(KEY_MINIMUM_BUNDLE) ?: 0
+    val max = arguments?.getInt(KEY_MAXIMUM_BUNDLE) ?: 0
+    val currentMin = arguments?.getInt(KEY_CURRENT_MIN_BUNDLE) ?: 0
+    val currentMax = arguments?.getInt(KEY_CURRENT_MAX_BUNDLE) ?: 0
 
-    initViews(max, min)
+    initViews(min, max, currentMin, currentMax)
   }
 
-  private fun initViews(max: Int, min: Int) {
+  private fun initViews(min: Int, max: Int, currentMin: Int, currentMax: Int) {
+    AppLogger.d("TAG__ $min $max $currentMin $currentMax")
     dialog.setTitle(R.string.set_filters)
 
     f_filter_seek_max.max = max - min
-    f_filter_seek_max.progress = max - min
-    f_filter_txt_max.text = max.toString()
+    f_filter_seek_max.progress = currentMax - min
+    f_filter_txt_max.text = currentMax.toString()
 
     f_filter_seek_min.max = max - min
-    f_filter_txt_min.text = min.toString()
+    f_filter_seek_min.progress = currentMin - min
+    f_filter_txt_min.text = currentMin.toString()
 
     f_filter_seek_max.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
       override fun onStopTrackingTouch(p0: SeekBar?) = Unit
@@ -92,12 +94,16 @@ class FilterFragment : DialogFragment() {
   companion object {
     private const val KEY_MINIMUM_BUNDLE = "KEY_MINIMUM_BUNDLE"
     private const val KEY_MAXIMUM_BUNDLE = "KEY_MAXIMUM_BUNDLE"
+    private const val KEY_CURRENT_MIN_BUNDLE = "KEY_CURRENT_MIN_BUNDLE"
+    private const val KEY_CURRENT_MAX_BUNDLE = "KEY_CURRENT_MAX_BUNDLE"
 
-    fun newInstance(min: Int, max: Int): FilterFragment {
+    fun newInstance(min: Int, max: Int, currentMin: Int, currentMax: Int): FilterFragment {
       val fragment = FilterFragment()
       val args = Bundle()
       args.putInt(KEY_MINIMUM_BUNDLE, min)
       args.putInt(KEY_MAXIMUM_BUNDLE, max)
+      args.putInt(KEY_CURRENT_MIN_BUNDLE, currentMin)
+      args.putInt(KEY_CURRENT_MAX_BUNDLE, currentMax)
       fragment.arguments = args
       return fragment
     }

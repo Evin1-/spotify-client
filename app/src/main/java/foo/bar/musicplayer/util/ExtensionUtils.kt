@@ -1,7 +1,6 @@
 package foo.bar.musicplayer.util
 
 import foo.bar.musicplayer.model.Artist
-import foo.bar.musicplayer.ui.search.SearchListContract
 import foo.bar.musicplayer.ui.search.SearchListPresenter
 import foo.bar.musicplayer.util.rx.SchedulerProvider
 import io.reactivex.Single

@@ -13,15 +13,16 @@ interface SearchListContract {
     fun showData(artists: List<Artist>)
     fun showDescendingOrderIcon()
     fun showAscendingOrderIcon()
-    fun showFilterFragment(min: Int, max: Int)
+    fun showFilterFragment(min: Int, max: Int, currentMin: Int, currentMax: Int)
   }
 
   interface Presenter {
     fun attachView(view: View)
     fun detachView()
     fun loadData(searchTerm: String)
+    fun loadDataFromCache(searchTerm: String, currentMin: Int?, currentMax: Int?)
+    fun loadDataFiltered(min: Int, max: Int)
     fun toggleSortData()
-    fun getFilterRanges()
-    fun filterList(min: Int, max: Int)
+    fun triggerFilterView(currentMin: Int?, currentMax: Int?)
   }
 }

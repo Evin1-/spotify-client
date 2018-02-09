@@ -3,13 +3,12 @@ package foo.bar.musicplayer.data
 import foo.bar.musicplayer.data.local.CacheManager
 import foo.bar.musicplayer.data.network.RemoteManager
 import foo.bar.musicplayer.model.Artist
-import foo.bar.musicplayer.util.rx.SchedulerProvider
 import foo.bar.musicplayer.util.ExtensionUtils.swapThreadJumpBack
+import foo.bar.musicplayer.util.rx.SchedulerProvider
 import io.reactivex.Single
 import io.reactivex.functions.Consumer
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.Exception
 
 /**
  * Created by evin on 2/8/18.
@@ -44,7 +43,7 @@ class SpotifyRepository @Inject constructor(private val cacheManager: CacheManag
           ?.subscribe({ cacheManager.updateCacheData(searchTerm, it) }, { refreshToken(searchTerm, it) })
     }
 
-    return retrieveArtistsCache(searchTerm)
+    return retrieveArtistsFromCache(searchTerm)
   }
 
   private fun remoteArtistSingle(searchTerm: String, headersMap: Map<String, String>): Single<MutableList<Artist>>? {
@@ -79,7 +78,7 @@ class SpotifyRepository @Inject constructor(private val cacheManager: CacheManag
     return map
   }
 
-  fun retrieveArtistsCache(searchTerm: String?): Single<List<Artist>> {
+  fun retrieveArtistsFromCache(searchTerm: String?): Single<List<Artist>> {
     if (searchTerm == null) {
       return Single.error(Exception("Can't look up a null term!"))
     }
