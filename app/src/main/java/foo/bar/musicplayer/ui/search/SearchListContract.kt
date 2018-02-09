@@ -22,7 +22,7 @@ interface SearchListContract {
     fun loadDataRemotely(searchTerm: String)
     fun loadDataFromCache(searchTerm: String, currentMin: Int?, currentMax: Int?)
     fun loadDataFiltered(min: Int, max: Int)
-    fun toggleSortData()
+    fun toggleSortData(min: Int?, max: Int?)
     fun triggerFilterView(currentMin: Int?, currentMax: Int?)
     fun setCurrentOrder(currentOrder: Int)
   }

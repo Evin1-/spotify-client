@@ -56,7 +56,9 @@ class SearchListPresenter @Inject constructor(private val spotifyRepository: Spo
         })
   }
 
-  override fun toggleSortData() {
+  override fun toggleSortData(min: Int?, max: Int?) {
+    val minValue = min ?: 0
+    val maxValue = max ?: 0
     order = order.toggleOrder()
 
     if (order == ORDER_DESC) {
@@ -65,9 +67,7 @@ class SearchListPresenter @Inject constructor(private val spotifyRepository: Spo
       view?.showAscendingOrderIcon()
     }
 
-    spotifyRepository.retrieveArtistsFromCache(searchTerm)
-        .swapThreadJumpBack(schedulerProvider)
-        .subscribe { t -> refreshView(t) }
+    loadDataFiltered(minValue, maxValue)
   }
 
   override fun loadDataFiltered(min: Int, max: Int) {

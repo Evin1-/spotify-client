@@ -73,7 +73,7 @@ class SearchListFragment : Fragment(), SearchListContract.View, FilterFragment.F
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     when (item?.itemId) {
       R.id.m_main_filter -> searchListPresenter.triggerFilterView(currentMin, currentMax)
-      R.id.m_main_order -> searchListPresenter.toggleSortData()
+      R.id.m_main_order -> searchListPresenter.toggleSortData(currentMin, currentMax)
       else -> return super.onOptionsItemSelected(item)
     }
     return true
