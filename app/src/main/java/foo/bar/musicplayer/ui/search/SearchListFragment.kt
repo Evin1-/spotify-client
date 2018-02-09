@@ -42,13 +42,8 @@ class SearchListFragment : Fragment(), SearchListContract.View {
     super.onViewCreated(view, savedInstanceState)
 
     initViews()
-    searchListPresenter.getLiveData()
-        .observe(this, Observer { refreshAdapter(it) })
+    subscribeLiveData()
     searchListPresenter.loadData("Michael")
-  }
-
-  private fun refreshAdapter(artists: List<Artist>?) {
-    searchListAdapter?.setSearchResults(artists ?: emptyList())
   }
 
   override fun showData(artists: List<Artist>) {
@@ -65,6 +60,15 @@ class SearchListFragment : Fragment(), SearchListContract.View {
 
   override fun showError(error: String) {
     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+  }
+
+  private fun subscribeLiveData() {
+    searchListPresenter.getLiveData()
+        .observe(this, Observer { refreshAdapter(it) })
+  }
+
+  private fun refreshAdapter(artists: List<Artist>?) {
+    searchListAdapter?.setSearchResults(artists ?: emptyList())
   }
 
   private fun initViews() {

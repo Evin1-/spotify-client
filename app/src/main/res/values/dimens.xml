@@ -11,4 +11,11 @@
   <dimen name="list_row_margin">10dp</dimen>
 
   <dimen name="list_divider_height">1dp</dimen>
+  <dimen name="card_margin">5dp</dimen>
+  <dimen name="card_radius">4dp</dimen>
+  <dimen name="image_size">120dp</dimen>
+  <dimen name="separator_height">2dp</dimen>
+  <dimen name="separator_margin">10dp</dimen>
+  <dimen name="thumbs_size">12dp</dimen>
+  <dimen name="thums_margin">5dp</dimen>
 </resources>
