@@ -11,5 +11,7 @@
     <string name="title_activity_player">PlayerActivity</string>
   <string name="singer_description">Singer description</string>
     <string name="placeholder">Placeholder</string>
+  <string name="filter">filter</string>
+  <string name="reorder">reorder</string>
 
 </resources>

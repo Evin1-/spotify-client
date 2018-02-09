@@ -11,11 +11,14 @@ interface SearchListContract {
     fun hideProgress()
     fun showError(error: String)
     fun showData(artists: List<Artist>)
+    fun showDescendingOrderIcon()
+    fun showAscendingOrderIcon()
   }
 
   interface Presenter {
     fun attachView(view: View)
     fun detachView()
     fun loadData(searchTerm: String)
+    fun toggleSortData()
   }
 }

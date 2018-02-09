@@ -4,6 +4,7 @@ import foo.bar.musicplayer.data.local.CacheManager
 import foo.bar.musicplayer.data.network.RemoteManager
 import foo.bar.musicplayer.model.Artist
 import foo.bar.musicplayer.util.rx.SchedulerProvider
+import foo.bar.musicplayer.util.ExtensionUtils.swapThreadJumpBack
 import io.reactivex.Single
 import io.reactivex.functions.Consumer
 import java.lang.Exception
@@ -30,13 +31,12 @@ class SpotifyRepository @Inject constructor(private val cacheManager: CacheManag
   }
 
   fun retrieveArtists(searchTerm: String): Single<List<Artist>> {
-
     if (tokenAuth == null) {
       refreshToken(searchTerm, Exception(RemoteManager.UNAUTHORIZED_MESSAGE))
     } else {
       val headersMap = buildHeadersMap()
-      remoteArtistSingle(searchTerm, headersMap)?.subscribeOn(schedulerProvider.io())
-          ?.observeOn(schedulerProvider.ui())
+      remoteArtistSingle(searchTerm, headersMap)
+          ?.swapThreadJumpBack(schedulerProvider)
           ?.subscribe({ cacheManager.updateCacheData(searchTerm, it) }, { refreshToken(searchTerm, it) })
     }
 
@@ -64,8 +64,7 @@ class SpotifyRepository @Inject constructor(private val cacheManager: CacheManag
           }
         })
         .flatMap { remoteArtistSingle(searchTerm, buildHeadersMap()) }
-        .subscribeOn(schedulerProvider.io())
-        .observeOn(schedulerProvider.ui())
+        .swapThreadJumpBack(schedulerProvider)
         .subscribe({ cacheManager.updateCacheData(searchTerm, it) }, { it.printStackTrace() })
   }
 

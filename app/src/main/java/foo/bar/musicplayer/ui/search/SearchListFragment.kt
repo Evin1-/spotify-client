@@ -3,10 +3,10 @@ package foo.bar.musicplayer.ui.search
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.getDrawable
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 
 import foo.bar.musicplayer.MusicPlayerApplication
@@ -18,13 +18,15 @@ import javax.inject.Inject
 
 class SearchListFragment : Fragment(), SearchListContract.View {
 
-  private var searchListAdapter: SearchListAdapter? = null
-
   @Inject
   lateinit var searchListPresenter: SearchListPresenter
 
+  private var searchListAdapter: SearchListAdapter? = null
+  private var menu: Menu? = null
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    setHasOptionsMenu(true);
     injectDependencies()
     searchListPresenter.attachView(this)
   }
@@ -46,6 +48,20 @@ class SearchListFragment : Fragment(), SearchListContract.View {
     searchListPresenter.loadData("Michael")
   }
 
+  override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+    this.menu = menu
+    super.onCreateOptionsMenu(menu, inflater)
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    when (item?.itemId) {
+      R.id.m_main_filter -> TODO()
+      R.id.m_main_order -> searchListPresenter.toggleSortData()
+      else -> return super.onOptionsItemSelected(item)
+    }
+    return true
+  }
+
   override fun showData(artists: List<Artist>) {
     refreshAdapter(artists)
   }
@@ -60,6 +76,16 @@ class SearchListFragment : Fragment(), SearchListContract.View {
 
   override fun showError(error: String) {
     Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+  }
+
+  override fun showAscendingOrderIcon() {
+    menu?.findItem(R.id.m_main_order)
+        ?.icon = context?.let { getDrawable(it, R.drawable.ic_trending_down_white_24dp) }
+  }
+
+  override fun showDescendingOrderIcon() {
+    menu?.findItem(R.id.m_main_order)
+        ?.icon = context?.let { getDrawable(it, R.drawable.ic_trending_up_white_24dp) }
   }
 
   private fun subscribeLiveData() {

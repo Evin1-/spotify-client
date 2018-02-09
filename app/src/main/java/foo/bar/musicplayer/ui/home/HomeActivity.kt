@@ -5,6 +5,10 @@ import android.support.v7.app.AppCompatActivity
 
 import foo.bar.musicplayer.R
 import foo.bar.musicplayer.ui.search.SearchListFragment
+import android.R.menu
+import android.view.Menu
+import android.view.MenuInflater
+
 
 class HomeActivity : AppCompatActivity() {
 
@@ -21,6 +25,12 @@ class HomeActivity : AppCompatActivity() {
           .replace(R.id.container, SearchListFragment(), SEARCH_FRAGMENT_TAG)
           .commit()
     }
+  }
+
+  override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    val inflater = menuInflater
+    inflater.inflate(R.menu.main_menu, menu)
+    return true
   }
 
   companion object {
