@@ -54,6 +54,7 @@ dependencies {
 
   implementation "android.arch.lifecycle:extensions:$rootProject.architectureComponentsVersion"
   kapt "android.arch.lifecycle:compiler:$rootProject.architectureComponentsVersion"
+  testImplementation "android.arch.core:core-testing:$rootProject.architectureComponentsVersion"
 
   kapt "com.android.databinding:compiler:$rootProject.dataBindingCompilerVersion"
 
